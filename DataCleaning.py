@@ -1,7 +1,12 @@
 import json
 import os
 import re
+import sys
 from datetime import datetime
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+except:
+    pass
 
 INPUT_DIR = "data"
 OUTPUT_DIR = "cleaned_data"
@@ -33,6 +38,10 @@ total_seen = 0
 total_kept = 0
 seen_uris = set()
 
+if not os.path.exists(INPUT_DIR):
+    print(f"ERROR: Input directory '{INPUT_DIR}' not found.")
+    exit(1)
+    
 for filename in os.listdir(INPUT_DIR):
     if not filename.endswith(".jsonl"):
         continue
@@ -72,7 +81,7 @@ for filename in os.listdir(INPUT_DIR):
                 "uri": uri
             }
 
-            current_file.write(json.dumps(cleaned) + "\n")
+            current_file.write(json.dumps(cleaned, ensure_ascii=False) + "\n")
             total_kept += 1
 
             if current_file.tell() >= MAX_FILE_SIZE:
