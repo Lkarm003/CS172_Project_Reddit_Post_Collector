@@ -1,0 +1,90 @@
+import json
+import os
+import re
+from datetime import datetime
+
+INPUT_DIR = "data"
+OUTPUT_DIR = "cleaned_data"
+MIN_TEXT_LENGTH = 20
+MAX_FILE_SIZE = 10 * 1024 * 1024
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+def clean_text(text):
+    if not text:
+        return None
+    text = text.strip()
+    text = re.sub(r'\s+', ' ', text)
+    return text
+
+def normalize_timestamp(ts):
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00")).isoformat()
+    except:
+        return None
+
+def get_new_file(index):
+    return open(f"{OUTPUT_DIR}/cleaned_posts_{index}.jsonl", "a", encoding="utf-8")
+
+file_index = 0
+current_file = get_new_file(file_index)
+
+total_seen = 0
+total_kept = 0
+seen_uris = set()
+
+for filename in os.listdir(INPUT_DIR):
+    if not filename.endswith(".jsonl"):
+        continue
+
+    with open(os.path.join(INPUT_DIR, filename), "r", encoding="utf-8") as infile:
+        for line in infile:
+            total_seen += 1
+
+            try:
+                post = json.loads(line)
+                uri = post.get("uri")
+
+                if not uri or uri in seen_uris:
+                    continue
+
+                seen_uris.add(uri)
+            except:
+                continue
+
+            text = clean_text(post.get("text"))
+
+            if not text or len(text) < MIN_TEXT_LENGTH:
+                continue
+
+            author = post.get("author", "")
+            if "bot" in author.lower():
+                continue
+
+            created_at = normalize_timestamp(post.get("created_at"))
+            if not created_at:
+                continue
+
+            cleaned = {
+                "text": text,
+                "author": author,
+                "created_at": created_at,
+                "uri": uri
+            }
+
+            current_file.write(json.dumps(cleaned) + "\n")
+            total_kept += 1
+
+            if current_file.tell() >= MAX_FILE_SIZE:
+                current_file.close()
+                file_index += 1
+                current_file = get_new_file(file_index)
+
+current_file.close()
+
+print(f"Processed: {total_seen}")
+print(f"Kept: {total_kept}")
+if total_seen > 0:
+    print(f"Retention: {total_kept/total_seen:.2f}")
+else:
+    print("Retention: 0")
