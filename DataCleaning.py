@@ -78,7 +78,9 @@ for filename in os.listdir(INPUT_DIR):
                 "text": text,
                 "author": author,
                 "created_at": created_at,
-                "uri": uri
+                "uri": uri,
+                "url": post.get("url"),
+                "external_title": post.get("external_title")
             }
 
             current_file.write(json.dumps(cleaned, ensure_ascii=False) + "\n")
