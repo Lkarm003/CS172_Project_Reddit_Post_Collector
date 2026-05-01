@@ -39,14 +39,14 @@ The system is composed of three main components:
 `python clean_data.py`
 
 ## ⚙️ Directory Structure
-`.
-├── main.py
-├── BlueSkyStreamCollector.py
-├── clean_data.py
-├── data/                # Raw collected data (~500MB)
-├── cleaned_data/        # Processed data
-├── .gitignore
-└── README.md`
+`.`
+`├── main.py`
+`├── BlueSkyStreamCollector.py`
+`├── clean_data.py`
+`├── data/                # Raw collected data (~500MB)`
+`├── cleaned_data/        # Processed data`
+`├── .gitignore`
+`└── README.md`
 
 ## 📊 Dataset Summary
 - Total Raw Data: ~500MB
