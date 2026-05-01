@@ -62,6 +62,6 @@ The system relies on a live data stream, so some posts may be missed during conn
 
 ## 👥 Team Contributions
 - Jasmine: Data collection pipeline
-- Lahari: Data cleaning and preprocessing pipeline
+- Lahari: Data cleaning and preprocessing pipeline (Initial draft for API Collection)
 - Connor: URL enrichment, testing, and validation
 - Andrew: Organizing JSONL-based storage; Testing
