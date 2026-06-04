@@ -1,4 +1,8 @@
 data/
 cleaned_data/
 venv/
+docs/
+__pycache__/
+reference_materials/
 *.jsonl
+*.pyc
