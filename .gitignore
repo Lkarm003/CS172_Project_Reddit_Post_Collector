@@ -4,5 +4,6 @@ venv/
 docs/
 __pycache__/
 reference_materials/
+.vscode/
 *.jsonl
 *.pyc
