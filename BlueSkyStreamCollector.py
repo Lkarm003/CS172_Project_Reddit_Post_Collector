@@ -3,6 +3,7 @@ import json
 import os
 import re
 import requests
+import websockets
 from bs4 import BeautifulSoup
 
 OUTPUT_DIR = "data"
