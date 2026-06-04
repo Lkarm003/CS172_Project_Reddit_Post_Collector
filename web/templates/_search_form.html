@@ -1,0 +1,55 @@
+<form class="search-form" action="{{ url_for('search') }}" method="get" data-search-form>
+  <div class="query-row">
+    <label class="sr-only" for="q">Search query</label>
+    <input
+      id="q"
+      name="q"
+      type="search"
+      value="{{ query }}"
+      placeholder="Search posts, topics, or linked-page titles"
+      autocomplete="off"
+      autofocus
+    >
+    <button type="submit">Search</button>
+  </div>
+
+  <div class="filters" aria-label="Search options">
+    <label>
+      Mode
+      <select name="mode">
+        <option value="standard" {% if mode == "standard" %}selected{% endif %}>Standard</option>
+        <option value="fuzzy" {% if mode == "fuzzy" %}selected{% endif %}>Fuzzy</option>
+        <option value="phrase" {% if mode == "phrase" %}selected{% endif %}>Phrase</option>
+        <option value="title" {% if mode == "title" %}selected{% endif %}>URL/title</option>
+      </select>
+    </label>
+
+    <label>
+      Sort
+      <select name="sort">
+        <option value="relevance" {% if sort == "relevance" %}selected{% endif %}>Relevance</option>
+        <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest</option>
+      </select>
+    </label>
+
+    <label>
+      Author DID
+      <input name="author" type="text" value="{{ author }}" placeholder="did:plc:...">
+    </label>
+
+    <label>
+      From
+      <input name="date_from" type="date" value="{{ date_from }}">
+    </label>
+
+    <label>
+      To
+      <input name="date_to" type="date" value="{{ date_to }}">
+    </label>
+
+    <label class="checkbox-row">
+      <input name="has_url" type="checkbox" {% if has_url %}checked{% endif %}>
+      Has URL
+    </label>
+  </div>
+</form>
