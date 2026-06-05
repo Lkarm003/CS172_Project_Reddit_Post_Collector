@@ -19,6 +19,7 @@ def build_index(input_dir, index_name):
                 "author": {"type": "keyword"},
                 "created_at": {"type": "keyword"},
                 "url": {"type": "keyword"}
+                "votes": {"type": "integer"}
             }
         }
     }
@@ -51,6 +52,7 @@ def build_index(input_dir, index_name):
                         "author": post.get("author", ""),
                         "created_at": post.get("created_at", ""),
                         "url": post.get("url", "")
+                        "votes": post.get("votes", 0)
                     }
                     
                     es.index(index=index_name, body=doc_body)
