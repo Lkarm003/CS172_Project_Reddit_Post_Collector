@@ -1,3 +1,6 @@
+#EC portion: Multi-Crawler Architecture, implemented in Part B as an extension of Part A
+
+
 import asyncio
 #from requests import session
 import websockets
