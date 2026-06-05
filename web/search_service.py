@@ -2,6 +2,7 @@ import os
 from html import escape
 from dataclasses import dataclass
 from typing import Any
+from datetime import datetime, timezone
 
 from elasticsearch import Elasticsearch
 
@@ -189,26 +190,66 @@ def search_posts(
         return SearchResult(total=0, took_ms=None, results=[], error=str(exc))
 
     hits = response.get("hits", {})
+    hit_list = hits.get("hits", [])
+
+    if sort == "combined":
+
+        now = datetime.now(timezone.utc)
+
+        for hit in hit_list:
+            source = hit.get("_source", {})
+
+            relevance = hit.get("_score", 0)
+
+            # time score
+            created_at = source.get("created_at")
+            time_score = 0
+
+            try:
+                if created_at:
+                    post_time = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                    age_days = max((now - post_time).days, 0)
+                    time_score = 1 / (1 + age_days)
+            except:
+                time_score = 0
+
+            # votes score (safe fallback)
+            votes = source.get("votes", 0) or 0
+            try:
+                vote_score = min(float(votes) / 10.0, 1.0)
+            except:
+                vote_score = 0
+
+            hit["combined_score"] = (
+                0.6 * relevance +
+                0.2 * time_score +
+                0.2 * vote_score
+            )
+
+        hit_list.sort(
+            key=lambda x: x.get("combined_score", 0),
+            reverse=True
+        )
+
     results = []
-    for hit in hits.get("hits", []):
+
+    for hit in hit_list:
         source = hit.get("_source", {})
         highlight = hit.get("highlight", {})
         title_highlights = highlight.get("external_title") or []
 
-        results.append(
-            {
-                "id": hit.get("_id"),
-                "score": hit.get("_score"),
-                "text": source.get("text", ""),
-                "snippet": _snippet(source, highlight),
-                "external_title": source.get("external_title") or "",
-                "external_title_highlight": _safe_highlight(title_highlights[0]) if title_highlights else "",
-                "author": source.get("author", ""),
-                "created_at": source.get("created_at", ""),
-                "uri": source.get("uri", ""),
-                "url": source.get("url", ""),
-            }
-        )
+        results.append({
+            "id": hit.get("_id"),
+            "score": hit.get("combined_score", hit.get("_score")),
+            "text": source.get("text", ""),
+            "snippet": _snippet(source, highlight),
+            "external_title": source.get("external_title") or "",
+            "external_title_highlight": _safe_highlight(title_highlights[0]) if title_highlights else "",
+            "author": source.get("author", ""),
+            "created_at": source.get("created_at", ""),
+            "uri": source.get("uri", ""),
+            "url": source.get("url", ""),
+        })
 
     return SearchResult(
         total=_total_value(hits.get("total")),
@@ -239,3 +280,4 @@ def health_status() -> dict[str, Any]:
         status["error"] = str(exc)
 
     return status
+
