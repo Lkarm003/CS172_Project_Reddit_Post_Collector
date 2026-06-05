@@ -1,55 +1,105 @@
 <form class="search-form" action="{{ url_for('search') }}" method="get" data-search-form>
-  <div class="query-row">
-    <label class="sr-only" for="q">Search query</label>
-    <input
-      id="q"
-      name="q"
-      type="search"
-      value="{{ query }}"
-      placeholder="Search posts, topics, or linked-page titles"
-      autocomplete="off"
-      autofocus
-    >
-    <button type="submit">Search</button>
-  </div>
+    <div class="query-row">
+          <label class="sr-only" for="q">Search query</label>label>
+          <input
+                  id="q"
+                  name="q"
+                  type="search"
+                  value="{{ query }}"
+                  placeholder="Search posts, topics, or linked-page titles"
+                  autocomplete="off"
+                  autofocus
+                >
+                    <button type="submit">Search</button>button>
+    </div>div>
 
-  <div class="filters" aria-label="Search options">
-    <label>
-      Mode
-      <select name="mode">
-        <option value="standard" {% if mode == "standard" %}selected{% endif %}>Standard</option>
-        <option value="fuzzy" {% if mode == "fuzzy" %}selected{% endif %}>Fuzzy</option>
-        <option value="phrase" {% if mode == "phrase" %}selected{% endif %}>Phrase</option>
-        <option value="title" {% if mode == "title" %}selected{% endif %}>URL/title</option>
-      </select>
-    </label>
+    <div class="filters" aria-label="Search options">
+          <label>
+                  Mode
+                  <select name="mode">
+                            <option value="standard" {% if mode == "standard" %}selected{% endif %}>Standard</option>option>
+                            <option value="fuzzy" {% if mode == "fuzzy" %}selected{% endif %}>Fuzzy</option>option>
+                            <option value="phrase" {% if mode == "phrase" %}selected{% endif %}>Phrase</option>option>
+                            <option value="title" {% if mode == "title" %}selected{% endif %}>URL/title</option>option>
+                  </select>select>
+          </label>
 
-    <label>
-      Sort
-      <select name="sort">
-        <option value="relevance" {% if sort == "relevance" %}selected{% endif %}>Relevance</option>
-        <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest</option>
-      </select>
-    </label>
+          <label>
+                  Sort
+                  <select name="sort" id="sort-select" onchange="toggleWeights()">
+                            <option value="relevance" {% if sort == "relevance" %}selected{% endif %}>Relevance</option>option>
+                            <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest</option>option>
+                            <option value="combined" {% if sort == "combined" %}selected{% endif %}>Combined (relevance + time)</option>option>
+                  </select>select>
+          </label>
 
-    <label>
-      Author DID
-      <input name="author" type="text" value="{{ author }}" placeholder="did:plc:...">
-    </label>
+          <label>
+                  Author DID
+                  <input name="author" type="text" value="{{ author }}" placeholder="did:plc:...">
+          </label>
 
-    <label>
-      From
-      <input name="date_from" type="date" value="{{ date_from }}">
-    </label>
+          <label>
+                  From
+                  <input name="date_from" type="date" value="{{ date_from }}">
+          </label>
 
-    <label>
-      To
-      <input name="date_to" type="date" value="{{ date_to }}">
-    </label>
+          <label>
+                  To
+                  <input name="date_to" type="date" value="{{ date_to }}">
+          </label>
 
-    <label class="checkbox-row">
-      <input name="has_url" type="checkbox" {% if has_url %}checked{% endif %}>
-      Has URL
-    </label>
-  </div>
-</form>
+          <label class="checkbox-row">
+                  <input name="has_url" type="checkbox" {% if has_url %}checked{% endif %}>
+                  Has URL
+          </label>
+    </div>div>
+
+    {# Extra-credit: weight sliders shown only when sort == "combined" #}
+    <div class="weight-controls" id="weight-controls" style="display:{% if sort == 'combined' %}flex{% else %}none{% endif %}; flex-wrap:wrap; gap:1rem; padding:.5rem 0; align-items:center;">
+          <span style="font-weight:600; font-size:.85rem;">Ranking weights (Combined mode)</span>span>
+
+          <label style="display:flex; flex-direction:column; font-size:.85rem; gap:.2rem;">
+                  Relevance weight
+                  <input
+                            type="range"
+                            name="w_relevance"
+                            id="w_relevance"
+                            min="0" max="5" step="0.1"
+                            value="{{ w_relevance | default(1.0) }}"
+                            oninput="document.getElementById('w_rel_val').textContent = parseFloat(this.value).toFixed(1)"
+                            style="width:140px;"
+                          >
+                  <span id="w_rel_val">{{ "%.1f"|format(w_relevance | default(1.0)) }}</span>span>
+          </label>
+
+          <label style="display:flex; flex-direction:column; font-size:.85rem; gap:.2rem;">
+                  Recency weight
+                  <input
+                            type="range"
+                            name="w_time"
+                            id="w_time"
+                            min="0" max="5" step="0.1"
+                            value="{{ w_time | default(0.0) }}"
+                            oninput="document.getElementById('w_time_val').textContent = parseFloat(this.value).toFixed(1)"
+                            style="width:140px;"
+                          >
+                  <span id="w_time_val">{{ "%.1f"|format(w_time | default(0.0)) }}</span>span>
+          </label>
+
+          <p style="font-size:.78rem; color:#555; max-width:340px; margin:0;">
+                  Combined score = <em>relevance_weight</em> &times; normalised&nbsp;ES&nbsp;score
+          + <em>recency_weight</em> &times; recency&nbsp;(exponential&nbsp;decay,&nbsp;30&#8209;day&nbsp;half&#8209;life).
+          </p>p>
+    </div>div>
+</form>form>
+
+<script>
+  function toggleWeights() {
+      var sort = document.getElementById('sort-select').value;
+      var panel = document.getElementById('weight-controls');
+      if (panel) panel.style.display = sort === 'combined' ? 'flex' : 'none';
+  }
+</script>
+</script></em></em>
+          </label>
+          </label>
