@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Bluesky Post Search{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <div>
+      <a class="site-title" href="{{ url_for('home') }}">Bluesky Post Search</a>
+      <span class="course-label">CS172 Phase B</span>
+    </div>
+    <nav aria-label="Primary">
+      <a href="{{ url_for('health') }}">Health</a>
+      <span class="status {% if status and status.connected and status.index_exists %}ok{% else %}warn{% endif %}">
+        {% if status and status.connected and status.index_exists %}
+          Index ready
+        {% else %}
+          Index offline
+        {% endif %}
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("[data-search-form]").forEach(function (form) {
+        form.addEventListener("submit", function () {
+          const button = form.querySelector("button[type='submit']");
+          if (button) {
+            button.disabled = true;
+            button.dataset.originalText = button.textContent;
+            button.textContent = "Searching...";
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-copy]").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          try {
+            await navigator.clipboard.writeText(button.dataset.copy);
+            button.textContent = "Copied";
+            setTimeout(function () {
+              button.textContent = "Copy URI";
+            }, 1200);
+          } catch (error) {
+            button.textContent = "Copy failed";
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

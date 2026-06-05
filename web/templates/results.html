@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Results for {{ query }}{% endblock %}
+
+{% block content %}
+<section class="results-layout">
+  {% include "_search_form.html" %}
+
+  <section class="results-panel" aria-live="polite">
+    <div class="results-summary">
+      <div>
+        <h1>Search results</h1>
+        <p class="page-note">Query: {% if query %}{{ query }}{% else %}all indexed posts{% endif %}</p>
+      </div>
+      <p>
+        {% if error %}
+          Elasticsearch error
+        {% else %}
+          {{ "{:,}".format(total) }} result{% if total != 1 %}s{% endif %}
+          {% if took_ms is not none %}in {{ took_ms }} ms{% endif %}
+        {% endif %}
+      </p>
+    </div>
+
+    {% if error %}
+      <div class="empty-state error-state">
+        <h2>Search is unavailable</h2>
+        <p>{{ error }}</p>
+      </div>
+    {% elif results %}
+      <div class="result-list">
+        {% for result in results %}
+          <article class="result-card">
+            <div class="result-meta">
+              <span>Score {{ "%.3f"|format(result.score or 0) }}</span>
+              {% if result.created_at %}<span>{{ result.created_at }}</span>{% endif %}
+            </div>
+
+            {% if result.external_title or result.external_title_highlight %}
+              <h2>
+                {% if result.external_title_highlight %}
+                  {{ result.external_title_highlight | safe }}
+                {% else %}
+                  {{ result.external_title }}
+                {% endif %}
+              </h2>
+            {% endif %}
+
+            <p class="snippet">{{ result.snippet | safe }}</p>
+
+            <dl class="metadata-grid">
+              {% if result.author %}
+                <div>
+                  <dt>Author</dt>
+                  <dd>{{ result.author }}</dd>
+                </div>
+              {% endif %}
+              {% if result.uri %}
+                <div>
+                  <dt>URI</dt>
+                  <dd>{{ result.uri }}</dd>
+                </div>
+              {% endif %}
+              {% if result.url %}
+                <div>
+                  <dt>URL</dt>
+                  <dd><a href="{{ result.url }}" target="_blank" rel="noopener noreferrer">{{ result.url }}</a></dd>
+                </div>
+              {% endif %}
+            </dl>
+
+            <details>
+              <summary>Full post</summary>
+              <p>{{ result.text }}</p>
+            </details>
+
+            {% if result.uri %}
+              <button class="text-button" type="button" data-copy="{{ result.uri }}">Copy URI</button>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+
+      <nav class="pagination" aria-label="Results pages">
+        {% if page > 1 %}
+          <a href="{{ url_for('search', q=query, mode=mode, sort=sort, author=author, has_url='on' if has_url else None, date_from=date_from, date_to=date_to, page=page-1) }}">Previous</a>
+        {% endif %}
+        {% if total > page * page_size %}
+          <a href="{{ url_for('search', q=query, mode=mode, sort=sort, author=author, has_url='on' if has_url else None, date_from=date_from, date_to=date_to, page=page+1) }}">Next</a>
+        {% endif %}
+      </nav>
+    {% else %}
+      <div class="empty-state">
+        <h2>No results found</h2>
+        <p>Try Standard or Fuzzy mode, remove filters, or search a broader term.</p>
+      </div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

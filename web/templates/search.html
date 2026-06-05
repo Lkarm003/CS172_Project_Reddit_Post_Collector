@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Search Bluesky Posts{% endblock %}
+
+{% block content %}
+<section class="search-shell">
+  <h1>Search the Bluesky dataset</h1>
+  <p class="page-note">
+    This page searches cleaned Bluesky posts from our Elasticsearch index.
+  </p>
+
+  {% include "_search_form.html" %}
+
+  <p class="small-note">
+    Dataset summary: about 1.38 million raw posts, about 1.14 million cleaned posts,
+    82% retention. Index name: {{ status.index }}.
+  </p>
+</section>
+{% endblock %}
