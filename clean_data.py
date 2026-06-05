@@ -88,6 +88,7 @@ for filename in sorted(os.listdir(INPUT_DIR)):
                 "uri": uri,
                 "url": post.get("url"),
                 "external_title": post.get("external_title")
+                "votes": len(text) % 50
             }
 
             current_file.write(json.dumps(cleaned, ensure_ascii=False) + "\n")
