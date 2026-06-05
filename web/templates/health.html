@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Search Health{% endblock %}
+
+{% block content %}
+<section class="health-shell">
+  <p class="eyebrow">System status</p>
+  <h1>Index health</h1>
+
+  <dl class="health-grid">
+    <div>
+      <dt>Elasticsearch URL</dt>
+      <dd>{{ status.es_url }}</dd>
+    </div>
+    <div>
+      <dt>Connected</dt>
+      <dd>{{ "Yes" if status.connected else "No" }}</dd>
+    </div>
+    <div>
+      <dt>Index</dt>
+      <dd>{{ status.index }}</dd>
+    </div>
+    <div>
+      <dt>Index exists</dt>
+      <dd>{{ "Yes" if status.index_exists else "No" }}</dd>
+    </div>
+    <div>
+      <dt>Document count</dt>
+      <dd>
+        {% if status.document_count is not none %}
+          {{ "{:,}".format(status.document_count) }}
+        {% else %}
+          Unknown
+        {% endif %}
+      </dd>
+    </div>
+  </dl>
+
+  {% if status.error %}
+    <div class="empty-state error-state">
+      <h2>Connection error</h2>
+      <p>{{ status.error }}</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

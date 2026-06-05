@@ -1,0 +1,313 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f7f7f7;
+  color: #222;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+a {
+  color: #0645ad;
+}
+
+mark {
+  background: #fff3a3;
+  padding: 0 2px;
+}
+
+header {
+  align-items: center;
+  background: #ffffff;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 22px;
+}
+
+nav {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.site-title {
+  color: #111;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.course-label {
+  color: #666;
+  margin-left: 10px;
+}
+
+.status {
+  border: 1px solid #bbbbbb;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  padding: 4px 7px;
+}
+
+.status.ok {
+  background: #e8f4ea;
+  color: #126427;
+}
+
+.status.warn {
+  background: #fff4df;
+  color: #8a5200;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 1040px;
+  padding: 24px;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin: 0 0 8px;
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+}
+
+.page-note,
+.small-note {
+  color: #555;
+  margin: 0 0 18px;
+}
+
+.small-note {
+  font-size: 0.95rem;
+}
+
+.search-form {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  margin: 18px 0 22px;
+  padding: 14px;
+}
+
+.query-row {
+  display: flex;
+  gap: 8px;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  border: 1px solid #aaaaaa;
+  border-radius: 2px;
+  padding: 7px;
+}
+
+.query-row input {
+  flex: 1;
+}
+
+button,
+.pagination a {
+  background: #eeeeee;
+  border: 1px solid #999999;
+  border-radius: 2px;
+  color: #111;
+  cursor: pointer;
+  padding: 7px 12px;
+  text-decoration: none;
+}
+
+button:hover,
+.pagination a:hover {
+  background: #dddddd;
+}
+
+button:disabled {
+  color: #777;
+}
+
+.filters {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.filters label {
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.filters input,
+.filters select {
+  display: block;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.checkbox-row {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  padding-top: 22px;
+}
+
+.checkbox-row input {
+  margin: 0;
+  width: auto;
+}
+
+.results-summary {
+  align-items: flex-start;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+}
+
+.results-summary > p {
+  color: #555;
+  margin: 0;
+}
+
+.result-list {
+  display: grid;
+  gap: 12px;
+}
+
+.result-card {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 14px;
+}
+
+.result-meta {
+  color: #666;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.snippet {
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+
+.metadata-grid {
+  background: #f0f0f0;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  margin: 12px 0;
+  padding: 10px;
+}
+
+dt {
+  color: #555;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+details {
+  border-top: 1px solid #dddddd;
+  margin-top: 10px;
+  padding-top: 8px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.text-button {
+  background: none;
+  border: 0;
+  color: #0645ad;
+  margin-top: 8px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.empty-state {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  padding: 18px;
+}
+
+.error-state {
+  border-color: #cc7777;
+}
+
+.error-state h2 {
+  color: #9b1c1c;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.health-grid {
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  padding: 14px;
+}
+
+.sr-only {
+  height: 1px;
+  left: -10000px;
+  overflow: hidden;
+  position: absolute;
+  top: auto;
+  width: 1px;
+}
+
+@media (max-width: 760px) {
+  header,
+  .results-summary,
+  .query-row {
+    display: block;
+  }
+
+  nav {
+    margin-top: 10px;
+  }
+
+  .query-row button {
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .filters,
+  .metadata-grid,
+  .health-grid {
+    grid-template-columns: 1fr;
+  }
+}
