@@ -61,7 +61,11 @@ URL title extraction may fail for some links due to network timeouts or restrict
 The system relies on a live data stream, so some posts may be missed during connection interruptions
 
 ## 👥 Team Contributions
-- Jasmine: Data collection pipeline
-- Lahari: Data cleaning and preprocessing pipeline (Initial draft for API Collection)
-- Connor: URL enrichment, testing, and validation
-- Andrew: Organizing JSONL-based storage; Testing
+- Jasmine: API Collection; Raw Data; Data Cleaning; Document formatting & setup; ReadMe file. Quality check for BlueSkyStreamCollector.py and ensured collectors are still working as expected. Report document 
+- Lahari: Integration; Testing; Extra Credit specs
+GitHub setup. Changed BlueSkyStreamCollector.py so that it has an multi-crawler architecture instead of the single crawler one for Extra Credit, initial draft for API Collection, added to/improved data cleaning portion, initial version of combined weights EC, 
+- Connor: URL enrichment, testing, and validation, Built the backend indexing script indexer.py with local Elasticsearch functionality for the B1 requirements.
+- Andrew: Organizing JSONL-based storage; Testing, Web-interface UI
+
+
+
